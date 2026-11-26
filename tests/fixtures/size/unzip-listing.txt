@@ -1,0 +1,11 @@
+Archive:  app-release.apk
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+  8123456  01-01-1981 01:01   lib/arm64-v8a/libflutter.so
+  5523456  01-01-1981 01:01   lib/arm64-v8a/libapp.so
+  7123456  01-01-1981 01:01   lib/armeabi-v7a/libflutter.so
+   912345  01-01-1981 01:01   classes.dex
+  2600000  01-01-1981 01:01   assets/flutter_assets/assets/images/onboarding.png
+   450000  01-01-1981 01:01   resources.arsc
+---------                     -------
+ 24732713                     6 files

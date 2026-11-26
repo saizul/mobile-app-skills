@@ -1,0 +1,12 @@
+Pocket Budget helps you understand your spending in minutes a day.
+
+Add expenses with one tap, scan receipts with the camera, and group them into categories that make sense to you. Set a monthly budget per category and get a gentle reminder before you overspend.
+
+Features:
+- Quick add with smart category suggestions
+- Receipt scanning
+- Monthly and yearly reports
+- Shared budgets for couples and families
+- Export to CSV
+
+Your data stays on your device unless you turn on encrypted sync.

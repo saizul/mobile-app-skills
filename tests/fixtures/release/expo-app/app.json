@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "Pocket",
+    "version": "1.2",
+    "android": {
+      "versionCode": 7
+    },
+    "ios": {
+      "buildNumber": "7"
+    }
+  }
+}

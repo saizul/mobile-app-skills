@@ -1,0 +1,25 @@
+{
+  "name": "mobile-app-skills",
+  "displayName": "Mobile App Skills",
+  "version": "0.1.0",
+  "description": "Agent Skills for Flutter and React Native apps on Google Play and the App Store: listing limits, AndroidManifest and Info.plist audits, release preflight and rollout, crash grouping, APK/AAB/IPA size reports and framework best practices.",
+  "author": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "homepage": "https://github.com/saizul/mobile-app-skills",
+  "repository": "https://github.com/saizul/mobile-app-skills",
+  "license": "MIT",
+  "keywords": [
+    "flutter",
+    "react-native",
+    "expo",
+    "android",
+    "ios",
+    "google-play",
+    "app-store",
+    "aso",
+    "release",
+    "crash-triage"
+  ]
+}

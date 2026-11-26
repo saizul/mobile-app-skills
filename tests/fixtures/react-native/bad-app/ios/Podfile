@@ -1,0 +1,4 @@
+ENV['RCT_NEW_ARCH_ENABLED'] = '0'
+use_react_native!(
+  :hermes_enabled => false
+)

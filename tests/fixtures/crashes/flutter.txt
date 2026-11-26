@@ -1,0 +1,11 @@
+E/flutter (12345): [ERROR:flutter/runtime/dart_vm_initializer.cc(41)] Unhandled Exception: Bad state: No element
+E/flutter (12345): #0      ListBase.firstWhere (dart:collection/list.dart:132:5)
+E/flutter (12345): #1      ExpenseList._selected (package:pocket_budget/screens/expense_list.dart:58:22)
+E/flutter (12345): #2      ExpenseList.build (package:pocket_budget/screens/expense_list.dart:31:12)
+E/flutter (12345): #3      StatelessElement.build (package:flutter/src/widgets/framework.dart:5687:49)
+
+----
+Unhandled Exception: type 'Null' is not a subtype of type 'String' in type cast
+#0      Expense.fromJson (package:pocket_budget/models/expense.dart:22:31)
+#1      ExpenseApi.fetch.<anonymous closure> (package:pocket_budget/api/expense_api.dart:40:44)
+#2      MappedListIterable.elementAt (dart:_internal/iterable.dart:425:31)

@@ -1,0 +1,47 @@
+{
+  "type": "apk",
+  "n": "app-release.apk",
+  "value": 0,
+  "children": [
+    {
+      "n": "lib",
+      "children": [
+        {
+          "n": "arm64-v8a",
+          "children": [
+            {
+              "n": "libapp.so (Dart AOT)",
+              "children": [
+                {
+                  "n": "package:pocket_budget",
+                  "value": 2400000
+                },
+                {
+                  "n": "package:flutter",
+                  "value": 3100000
+                }
+              ]
+            },
+            {
+              "n": "libflutter.so",
+              "value": 7900000
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "n": "assets",
+      "children": [
+        {
+          "n": "flutter_assets/assets/images/onboarding.png",
+          "value": 2600000
+        }
+      ]
+    },
+    {
+      "n": "classes.dex",
+      "value": 900000
+    }
+  ]
+}

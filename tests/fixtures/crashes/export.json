@@ -1,0 +1,22 @@
+{
+  "crashes": [
+    {
+      "count": 120,
+      "app_version": "2.3.0",
+      "stacktrace": "java.lang.IllegalStateException: Budget 1 not found\n\tat com.example.pocketbudget.data.BudgetRepository.load(BudgetRepository.kt:88)\n\tat com.example.pocketbudget.MainActivity.onCreate(MainActivity.kt:41)"
+    },
+    {
+      "count": 30,
+      "app_version": "2.2.1",
+      "stack": [
+        "java.lang.OutOfMemoryError: Failed to allocate a 1048576 byte allocation",
+        "\tat android.graphics.BitmapFactory.nativeDecodeStream(Native Method)",
+        "\tat com.example.pocketbudget.ui.ReceiptView.load(ReceiptView.kt:19)"
+      ]
+    },
+    {
+      "count": 5,
+      "note": "no stack here"
+    }
+  ]
+}

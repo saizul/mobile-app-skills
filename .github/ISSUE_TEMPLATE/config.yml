@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue
+    url: https://github.com/saizul/mobile-app-skills/security/advisories/new
+    about: Please report security problems privately.
+  - name: Questions and ideas
+    url: https://github.com/saizul/mobile-app-skills/discussions
+    about: Ask how to use a skill or share how you ship mobile apps.

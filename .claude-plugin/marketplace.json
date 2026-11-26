@@ -1,0 +1,38 @@
+{
+  "name": "mobile-app-skills",
+  "description": "Agent Skills for Flutter and React Native developers shipping to Google Play and the App Store.",
+  "owner": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "plugins": [
+    {
+      "name": "mobile-app-skills",
+      "source": "./",
+      "description": "Store listings, Android permission and iOS Info.plist audits, release checklist with preflight, crash triage, app size reduction, Flutter and React Native best practices.",
+      "category": "mobile",
+      "tags": [
+        "flutter",
+        "react-native",
+        "expo",
+        "android",
+        "ios",
+        "google-play",
+        "app-store",
+        "aso",
+        "crash-reporting",
+        "app-size"
+      ],
+      "skills": [
+        "./skills/store-listing-writer",
+        "./skills/android-permissions-audit",
+        "./skills/ios-plist-audit",
+        "./skills/release-checklist",
+        "./skills/crash-log-triage",
+        "./skills/app-size-reduction",
+        "./skills/flutter-best-practices",
+        "./skills/react-native-best-practices"
+      ]
+    }
+  ]
+}

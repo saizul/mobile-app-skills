@@ -1,0 +1,20 @@
+{
+  "play": {
+    "en-US": {
+      "title": "Pocket Budget: Expense Tracker",
+      "short_description": "Track spending, set budgets and see where your money goes each month.",
+      "full_description": "Pocket Budget helps you understand your spending in minutes a day.\n\nAdd expenses with one tap, scan receipts with the camera, and group them into categories that make sense to you. Set a monthly budget per category and get a gentle reminder before you overspend.\n\nFeatures:\n- Quick add with smart category suggestions\n- Receipt scanning\n- Monthly and yearly reports\n- Shared budgets for couples and families\n- Export to CSV\n\nYour data stays on your device unless you turn on encrypted sync.",
+      "release_notes": "Shared budgets now sync in real time. Receipt scanning is faster on older phones."
+    }
+  },
+  "appstore": {
+    "en-US": {
+      "name": "Pocket Budget",
+      "subtitle": "Expense tracker and planner",
+      "keywords": "money,spending,finance,receipt,scanner,savings,bills,monthly,family,shared,report,cash,goal",
+      "promotional_text": "New: shared budgets that sync in real time across your family.",
+      "description": "Pocket Budget helps you understand your spending in minutes a day. Add expenses with one tap, scan receipts, set monthly budgets per category and see clear reports.",
+      "release_notes": "Shared budgets now sync in real time."
+    }
+  }
+}

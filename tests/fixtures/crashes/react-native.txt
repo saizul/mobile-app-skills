@@ -1,0 +1,7 @@
+TypeError: undefined is not an object (evaluating 'budget.items.length')
+    at BudgetSummary (http://localhost:8081/index.bundle?platform=ios&dev=true:120434:45)
+    at renderWithHooks (http://localhost:8081/index.bundle?platform=ios&dev=true:20311:33)
+
+TypeError: undefined is not an object (evaluating 'budget.items.length')
+    at BudgetSummary (index.android.bundle:1:388122)
+    at renderWithHooks (index.android.bundle:1:120011)

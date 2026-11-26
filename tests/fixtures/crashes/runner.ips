@@ -1,0 +1,39 @@
+{"app_name": "Runner", "app_version": "2.3.0", "bug_type": "309", "name": "Runner"}
+{
+  "procName": "Runner",
+  "exception": {
+    "type": "EXC_BREAKPOINT",
+    "signal": "SIGTRAP"
+  },
+  "usedImages": [
+    {
+      "name": "Runner"
+    },
+    {
+      "name": "libswiftCore.dylib"
+    }
+  ],
+  "threads": [
+    {
+      "frames": [
+        {
+          "imageIndex": 1,
+          "symbol": "mach_msg"
+        }
+      ]
+    },
+    {
+      "triggered": true,
+      "frames": [
+        {
+          "imageIndex": 1,
+          "symbol": "_assertionFailure(_:_:file:line:flags:)"
+        },
+        {
+          "imageIndex": 0,
+          "symbol": "BudgetStore.total(for:)"
+        }
+      ]
+    }
+  ]
+}

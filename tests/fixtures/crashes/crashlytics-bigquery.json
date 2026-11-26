@@ -1,0 +1,53 @@
+[
+  {
+    "issue_id": "a1",
+    "platform": "ANDROID",
+    "application": {
+      "display_version": "2.3.0"
+    },
+    "exceptions": [
+      {
+        "type": "java.lang.IllegalArgumentException",
+        "exception_message": "amount must be positive: -42",
+        "blamed": true,
+        "frames": [
+          {
+            "symbol": "kotlin.jvm.internal.Intrinsics.checkArgument",
+            "file": "Intrinsics.java",
+            "library": "",
+            "owned": false
+          },
+          {
+            "symbol": "com.example.pocketbudget.ui.AddExpenseViewModel.save",
+            "file": "AddExpenseViewModel.kt",
+            "library": "",
+            "owned": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "issue_id": "a1",
+    "platform": "ANDROID",
+    "application": {
+      "display_version": "2.2.0"
+    },
+    "exceptions": [
+      {
+        "type": "java.lang.IllegalArgumentException",
+        "exception_message": "amount must be positive: -7",
+        "frames": [
+          {
+            "symbol": "kotlin.jvm.internal.Intrinsics.checkArgument",
+            "owned": false
+          },
+          {
+            "symbol": "com.example.pocketbudget.ui.AddExpenseViewModel.save",
+            "owned": true
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+name: pocket_budget
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  image_picker: ^1.1.0
+  local_auth: ^2.3.0
+dev_dependencies:
+  health: ^1.0.0

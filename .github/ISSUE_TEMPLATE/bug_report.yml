@@ -1,0 +1,46 @@
+name: Bug report
+description: A script crashed, reported a wrong finding, or a skill gave wrong or unsafe advice
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste keystores, signing passwords, API keys or crash reports with real user data.**
+        Reduce the input (manifest, plist, stack trace) to the lines that reproduce the problem and replace values with fakes.
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - store-listing-writer
+        - android-permissions-audit
+        - ios-plist-audit
+        - release-checklist
+        - crash-log-triage
+        - app-size-reduction
+        - flutter-best-practices
+        - react-native-best-practices
+        - validator / repository tooling
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: The command you ran, its output, and (for wrong findings) a minimal redacted input file.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "Flutter 3.x / React Native 0.83, Python 3.12, macOS, Claude Code / Codex CLI"
+    validations:
+      required: true

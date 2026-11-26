@@ -1,0 +1,32 @@
+Incident Identifier: 1B2C3D4E-0000-1111-2222-333344445555
+Hardware Model:      iPhone15,2
+Process:             Runner [1234]
+Version:             2.3.0 (41)
+OS Version:          iPhone OS 18.1 (22B83)
+
+Exception Type:  EXC_CRASH (SIGABRT)
+Exception Codes: 0x0000000000000000, 0x0000000000000000
+Termination Reason: SIGNAL 6 Abort trap: 6
+
+Last Exception Backtrace:
+0   CoreFoundation                	0x18f2b2f20 __exceptionPreprocess + 164
+1   libobjc.A.dylib               	0x1871e2018 objc_exception_throw + 60
+2   Runner                        	0x1002a4f10 -[ReceiptScanner startSession] + 312
+3   Runner                        	0x1002a3c44 AppDelegate.application(_:didFinishLaunchingWithOptions:) + 88
+
+Thread 0 Crashed:
+0   libsystem_kernel.dylib        	0x1d71f1a7c __pthread_kill + 8
+1   libsystem_pthread.dylib       	0x1f0b28c64 pthread_kill + 268
+
+Thread 1:
+0   libsystem_kernel.dylib        	0x1d71e9b00 mach_msg2_trap + 8
+
+Incident Identifier: 9F8E7D6C-0000-1111-2222-333344445555
+Process:             Runner [1300]
+Exception Type:  EXC_BAD_ACCESS (SIGSEGV)
+
+Thread 3 name:  io.flutter.1.raster
+Thread 3 Crashed:
+0   Flutter                       	0x1059a1b20 0x105000000 + 10099488
+1   Runner                        	0x100100abc 0x100000000 + 1051324
+2   libsystem_pthread.dylib       	0x1f0b2a06c _pthread_start + 136

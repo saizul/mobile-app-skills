@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Release artifacts (built by .github/workflows/release.yml)
+dist/
+
+# Never commit signing material or credentials
+*.jks
+*.keystore
+*.p12
+*.p8
+*.mobileprovision
+key.properties
+keystore.properties
+.env
+!tests/fixtures/**
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

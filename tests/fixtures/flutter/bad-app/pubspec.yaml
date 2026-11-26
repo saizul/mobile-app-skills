@@ -1,0 +1,19 @@
+name: pocket_budget
+description: Budget app
+version: 1.0.0+1
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.0
+  flutter_bloc: any
+  get: ^4.6.6
+  charts_lib:
+    git:
+      url: https://github.com/example/charts_lib.git
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+dependency_overrides:
+  intl: 0.19.0

@@ -1,0 +1,7 @@
+// !$*UTF8*$!
+{
+	objects = {
+		A1 /* Debug */ = { buildSettings = { CURRENT_PROJECT_VERSION = 120; MARKETING_VERSION = 1.8.0; }; };
+		A2 /* Release */ = { buildSettings = { CURRENT_PROJECT_VERSION = 120; MARKETING_VERSION = 1.8.0; }; };
+	};
+}

@@ -1,0 +1,4 @@
+name: pocket_budget
+version: 2.3.0+41
+environment:
+  sdk: ^3.5.0
