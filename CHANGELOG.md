@@ -6,6 +6,14 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `ios-plist-audit`: with `--project`, `plist_audit.py` reads `<locale>.lproj/InfoPlist.strings`
+  (UTF-8 or UTF-16, comments, escapes) and `InfoPlist.xcstrings` string catalogs. New checks
+  `usage.untranslated` (low) for purpose strings a locale does not translate and
+  `usage.localized_placeholder` (medium) for empty or placeholder translations. The
+  development region and `Base.lproj` are skipped.
+
 ## [0.1.0] - 2026-11-26
 
 ### Added

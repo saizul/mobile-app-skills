@@ -9,6 +9,9 @@ React Native / Expo package.json, Podfile, Swift and Objective-C sources), then 
   * location key combinations, deprecated keys
   * App Transport Security exceptions (arbitrary loads, insecure domains, old TLS)
   * export compliance key, LSApplicationQueriesSchemes count, privacy manifest presence
+  * with --project: localized purpose strings in <lang>.lproj/InfoPlist.strings and
+    InfoPlist.xcstrings that are missing (the prompt falls back to the development
+    language) or empty/placeholder
 
 Exit codes: 0 = ok, 1 = findings at or above --fail-on, 2 = error.
 """
@@ -221,6 +224,110 @@ def code_capabilities(project: Path) -> dict[str, str]:
     return found
 
 
+STRINGS_RE = re.compile(
+    r'(?:"((?:[^"\\]|\\.)*)"|([A-Za-z0-9_.-]+))\s*=\s*"((?:[^"\\]|\\.)*)"\s*;',
+)
+STRINGS_COMMENT_RE = re.compile(r"/\*.*?\*/|//[^\n]*", re.S)
+
+
+def _unescape(text: str) -> str:
+    return re.sub(r'\\(["\\n])', lambda m: "\n" if m.group(1) == "n" else m.group(1), text)
+
+
+def parse_strings(data: bytes) -> dict[str, str]:
+    """Parse an Apple .strings file (UTF-8 or UTF-16 with BOM, /* */ and // comments)."""
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        text = data.decode("utf-16")
+    else:
+        text = data.decode("utf-8-sig", errors="replace")
+    # Drop comments that are not inside quoted strings.
+    parts = re.split(r'("(?:[^"\\]|\\.)*")', text)
+    text = "".join(p if i % 2 else STRINGS_COMMENT_RE.sub(" ", p) for i, p in enumerate(parts))
+    out = {}
+    for m in STRINGS_RE.finditer(text):
+        out[_unescape(m.group(1) if m.group(1) is not None else m.group(2))] = _unescape(m.group(3))
+    return out
+
+
+def _is_usage_key(key: str) -> bool:
+    return key.endswith("UsageDescription")
+
+
+def localized_usage_strings(project: Path) -> dict[str, dict[str, str]]:
+    """{locale: {usage key: text}} from <locale>.lproj/InfoPlist.strings and InfoPlist.xcstrings."""
+    found: dict[str, dict[str, str]] = {}
+    for path in _files(project, "InfoPlist.strings"):
+        if not path.parent.name.endswith(".lproj"):
+            continue
+        locale = path.parent.name[: -len(".lproj")]
+        try:
+            entries = parse_strings(path.read_bytes())
+        except (OSError, UnicodeDecodeError):
+            continue
+        found.setdefault(locale, {}).update({k: v for k, v in entries.items() if _is_usage_key(k)})
+    for path in _files(project, "InfoPlist.xcstrings"):
+        try:
+            catalog = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            continue
+        source = catalog.get("sourceLanguage") if isinstance(catalog, dict) else None
+        strings = catalog.get("strings") if isinstance(catalog, dict) else None
+        for key, entry in (strings or {}).items():
+            if not _is_usage_key(key) or not isinstance(entry, dict):
+                continue
+            for locale, loc in (entry.get("localizations") or {}).items():
+                unit = loc.get("stringUnit") if isinstance(loc, dict) else None
+                if isinstance(unit, dict) and locale != source:
+                    found.setdefault(locale, {})[key] = str(unit.get("value") or "")
+        for locale in {
+            loc for e in (strings or {}).values() if isinstance(e, dict) for loc in (e.get("localizations") or {})
+        }:
+            if locale != source:
+                found.setdefault(locale, {})
+    return found
+
+
+def _same_language(locale: str, region: str) -> bool:
+    names = {"english": "en", "german": "de", "french": "fr", "spanish": "es", "japanese": "ja"}
+    a = names.get(locale.lower(), locale.lower()).replace("_", "-")
+    b = names.get(region.lower(), region.lower()).replace("_", "-")
+    return a == b or a.split("-")[0] == b
+
+
+def audit_localizations(info: dict, project: Path) -> list[Finding]:
+    out: list[Finding] = []
+    usage_keys = sorted(k for k in info if _is_usage_key(k) and isinstance(info[k], str) and info[k].strip())
+    region = str(info.get("CFBundleDevelopmentRegion") or "en")
+    if "$(" in region:
+        region = "en"
+    for locale, entries in sorted(localized_usage_strings(project).items()):
+        if locale == "Base" or _same_language(locale, region):
+            continue
+        missing = [k for k in usage_keys if k not in entries]
+        if missing:
+            out.append(
+                Finding(
+                    "usage.untranslated",
+                    "low",
+                    f"{locale}: " + ", ".join(missing),
+                    f"{len(missing)} purpose string(s) not localized for {locale}; the prompt shows the {region} text",
+                    f"add them to {locale}.lproj/InfoPlist.strings (or InfoPlist.xcstrings)",
+                )
+            )
+        for key, text in sorted(entries.items()):
+            if not text.strip() or (PLACEHOLDER_RE.search(text) and len(text) < 60):
+                out.append(
+                    Finding(
+                        "usage.localized_placeholder",
+                        "medium",
+                        f"{locale}: {key}",
+                        f"localized purpose string is empty or a placeholder: {text!r}",
+                        "translate the real purpose string; App Review reads the localized prompt too",
+                    )
+                )
+    return out
+
+
 def infer_capabilities(info: dict, entitlements: dict | None, project: Path | None) -> dict[str, str]:
     caps: dict[str, str] = {}
     modes = info.get("UIBackgroundModes") or []
@@ -430,6 +537,7 @@ def audit(
             )
         )
     if project is not None:
+        out += audit_localizations(info, project)
         manifests = [p for p in project.rglob("PrivacyInfo.xcprivacy") if not ({"Pods", "build"} & set(p.parts))]
         if not manifests:
             out.append(

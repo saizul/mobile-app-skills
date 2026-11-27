@@ -59,10 +59,14 @@ Paths below are relative to this skill's folder (in Claude Code: `${CLAUDE_SKILL
    for a named host the user controls or a documented third-party need, and scope it to
    that domain; see [references/ats.md](references/ats.md). `NSAllowsArbitraryLoads`
    requires a written justification in App Review.
-6. **Other findings:** set `ITSAppUsesNonExemptEncryption` to `false` only if the app
+6. **Localized prompts** (with `--project`): `usage.untranslated` lists purpose strings
+   missing from a locale's `InfoPlist.strings` / `InfoPlist.xcstrings` (users see the
+   development-language text); `usage.localized_placeholder` is an empty or TODO
+   translation. Add the translations next to the base string you wrote in step 4.
+7. **Other findings:** set `ITSAppUsesNonExemptEncryption` to `false` only if the app
    uses no encryption beyond HTTPS and OS APIs (the user must confirm their export
    status); add a `PrivacyInfo.xcprivacy` to the app target if missing.
-7. **Propose the plist diff** (XML `<key>/<string>` pairs) and wait for approval. Then
+8. **Propose the plist diff** (XML `<key>/<string>` pairs) and wait for approval. Then
    re-run the audit.
 
 ## Output

@@ -136,3 +136,107 @@ def test_cli(tmp_path):
     assert run_script(SKILL, SCRIPT, str(fixture("ios", "broken.plist"))).returncode == 2
     assert run_script(SKILL, SCRIPT, str(GOOD), "--project", str(tmp_path / "nope")).returncode == 2
     assert run_script(SKILL, SCRIPT, "--help").returncode == 0
+
+
+CAMERA = "Scan receipts with the camera to add expenses automatically."
+PHOTOS = "Pick a photo of a receipt from your library to attach it to an expense."
+LOC_INFO = {
+    "CFBundleDevelopmentRegion": "en",
+    "NSCameraUsageDescription": CAMERA,
+    "NSPhotoLibraryUsageDescription": PHOTOS,
+    "ITSAppUsesNonExemptEncryption": False,
+}
+
+
+def loc_project(tmp_path, files):
+    for rel, content in files.items():
+        path = tmp_path / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if isinstance(content, bytes):
+            path.write_bytes(content)
+        else:
+            path.write_text(content, encoding="utf-8")
+    (tmp_path / "ios" / "App" / "PrivacyInfo.xcprivacy").parent.mkdir(parents=True, exist_ok=True)
+    (tmp_path / "ios" / "App" / "PrivacyInfo.xcprivacy").write_text("<plist/>", encoding="utf-8")
+    return tmp_path
+
+
+def test_parse_strings_handles_comments_escapes_and_utf16():
+    text = (
+        '/* Camera */\n"NSCameraUsageDescription" = "Scanne \\"Belege\\" // nicht kommentar";\n'
+        '// line comment\nNSPhotoLibraryUsageDescription = "Fotos";\n'
+    )
+    parsed = mod.parse_strings(text.encode("utf-16"))
+    assert parsed == {
+        "NSCameraUsageDescription": 'Scanne "Belege" // nicht kommentar',
+        "NSPhotoLibraryUsageDescription": "Fotos",
+    }
+    assert mod.parse_strings(text.encode("utf-8")) == parsed
+
+
+def test_untranslated_and_placeholder_localizations(tmp_path):
+    project = loc_project(
+        tmp_path,
+        {
+            "ios/App/en.lproj/InfoPlist.strings": f'"NSCameraUsageDescription" = "{CAMERA}";',
+            "ios/App/Base.lproj/InfoPlist.strings": "",
+            "ios/App/de.lproj/InfoPlist.strings": '"NSCameraUsageDescription" = "Belege mit der Kamera scannen, um Ausgaben anzulegen.";',
+            "ios/App/fr.lproj/InfoPlist.strings": (
+                '"NSCameraUsageDescription" = "TODO";\n"NSPhotoLibraryUsageDescription" = "";'
+            ),
+            "ios/Pods/X/es.lproj/InfoPlist.strings": "",
+        },
+    )
+    findings, _ = mod.audit(dict(LOC_INFO), None, project)
+    got = {(f.check, f.key) for f in findings if f.check.startswith("usage.")}
+    assert got == {
+        ("usage.untranslated", "de: NSPhotoLibraryUsageDescription"),
+        ("usage.localized_placeholder", "fr: NSCameraUsageDescription"),
+        ("usage.localized_placeholder", "fr: NSPhotoLibraryUsageDescription"),
+    }
+    sev = {f.check: f.severity for f in findings}
+    assert sev["usage.untranslated"] == "low" and sev["usage.localized_placeholder"] == "medium"
+
+
+def test_xcstrings_catalog(tmp_path):
+    catalog = {
+        "sourceLanguage": "en",
+        "version": "1.0",
+        "strings": {
+            "NSCameraUsageDescription": {
+                "localizations": {
+                    "en": {"stringUnit": {"state": "translated", "value": CAMERA}},
+                    "bn": {"stringUnit": {"state": "translated", "value": "খরচ যোগ করতে ক্যামেরা দিয়ে রসিদ স্ক্যান করুন।"}},
+                    "ja": {"stringUnit": {"state": "new", "value": ""}},
+                }
+            },
+            "CFBundleDisplayName": {"localizations": {"ar": {"stringUnit": {"state": "translated", "value": "x"}}}},
+        },
+    }
+    project = loc_project(tmp_path, {"ios/App/InfoPlist.xcstrings": json.dumps(catalog, ensure_ascii=False)})
+    findings, _ = mod.audit(dict(LOC_INFO), None, project)
+    got = {(f.check, f.key) for f in findings if f.check.startswith("usage.")}
+    assert got == {
+        ("usage.untranslated", "ar: NSCameraUsageDescription, NSPhotoLibraryUsageDescription"),
+        ("usage.untranslated", "bn: NSPhotoLibraryUsageDescription"),
+        ("usage.untranslated", "ja: NSPhotoLibraryUsageDescription"),
+        ("usage.localized_placeholder", "ja: NSCameraUsageDescription"),
+    }
+
+
+def test_development_region_variants_are_skipped(tmp_path):
+    project = loc_project(
+        tmp_path, {"ios/App/English.lproj/InfoPlist.strings": "", "ios/App/en-GB.lproj/InfoPlist.strings": ""}
+    )
+    findings, _ = mod.audit(dict(LOC_INFO, CFBundleDevelopmentRegion="$(DEVELOPMENT_LANGUAGE)"), None, project)
+    assert not [f for f in findings if f.check.startswith("usage.")]
+
+
+def test_localization_cli_json(tmp_path):
+    project = loc_project(tmp_path, {"ios/App/de.lproj/InfoPlist.strings": "/* empty */"})
+    plist = tmp_path / "Info.plist"
+    plist.write_bytes(plistlib.dumps(LOC_INFO))
+    res = run_script(SKILL, SCRIPT, str(plist), "--project", str(project), "--json", "--fail-on", "low")
+    assert res.returncode == 1
+    checks = [f["check"] for f in json.loads(res.stdout)["findings"]]
+    assert checks.count("usage.untranslated") == 1
